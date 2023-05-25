@@ -18,21 +18,21 @@ const stripe = require("stripe")(
   "sk_test_51LXS98B5Y3AeAE8ixEr3XbAzakqMdCNqxsU9YIZyhx8IaSGdcIaHNUdF4zPSaludDIIwz7kxSsnL6bcAkD4EUURB00BKYOJvq7"
 );
 
-
+// Mongodb Database Connect 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.akmwf4e.mongodb.net/?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   serverApi: ServerApiVersion.v1,
 });
-client.connect((err) => {
-  const collection = client.db("test").collection("devices");
-  // perform actions on the collection object
-  client.close();
-});
+
+
+// Rest Api Function 
 async function run() {
   try {
     await client.connect();
+
+    // Database Collection 
     const eventBlogsCollection = client.db("Uiu").collection("EventBlogs");
     const recentEventsCollection = client.db("Uiu").collection("RecentEvents");
     const upcomingEventsCollection = client
@@ -45,17 +45,13 @@ async function run() {
     const AnnouncmentCollection = client.db("Uiu").collection("Announcment");
     const BlogCollection = client.db("Uiu").collection("blogs");
     const FaqCollection = client.db("Uiu").collection("Faq");
-
     const activitesCollection = client.db("Uiu").collection("Activites");
-
     const ForumClubCollection = client.db("Uiu").collection("Forum&Club");
     const allRequestCollection = client.db("Uiu").collection("AllReques");
     const customMemberCollection = client.db("Uiu").collection("customMember");
 
-    // start
 
-    // admin
-    // admin here=========
+    // admin here========= (userCollection)
     app.get("/admin/:email", async (req, res) => {
       const email = req.params.email;
       const user = await userCollection.findOne({ email: email });
@@ -63,6 +59,7 @@ async function run() {
       res.send({ admin: isAdmin });
     });
 
+    // User Section Here (userCollection)
     app.put("/user/:email", async (req, res) => {
       const email = req.params.email;
       const user = req.body;
@@ -105,7 +102,8 @@ async function run() {
       return res.send(result);
     });
 
-    // Club & Forum Data
+    // All Club & Forum Api For (ForumClubCollection)
+
     app.get("/service", async (req, res) => {
       const user = req.body;
       const users = await ForumClubCollection.find(user).toArray();
@@ -154,7 +152,7 @@ async function run() {
       res.send(service);
     });
 
-    // new member
+    // new member join forum & club Section  (customMemberCollection)
     app.post("/custom", async (req, res) => {
       const query = req.body;
       const service = await customMemberCollection.insertOne(query);
@@ -167,8 +165,7 @@ async function run() {
       res.send(service);
     });
 
- 
-
+    // Blog Section Api (BlogCollection)
     app.post("/blog", async (req, res) => {
       const query = req.body;
       const blogPost = await BlogCollection.insertOne(query);
@@ -183,7 +180,7 @@ async function run() {
       return res.send(result);
     });
 
-    // FaQ Section
+    // FaQ Section Api (FaqCollection)
 
     app.post("/faq", async (req, res) => {
       const query = req.body;
@@ -199,7 +196,7 @@ async function run() {
       return res.send(result);
     });
 
-    // Actives  Here
+    // Forum & Club Activites Api Here (activitesCollection)
 
     app.post("/activites", async (req, res) => {
       const query = req.body;
@@ -215,7 +212,7 @@ async function run() {
       return res.send(result);
     });
 
-    // announcment
+    // Forum & Club announcment Api Here (AnnouncmentCollection)
 
     app.post("/announcment", async (req, res) => {
       const query = req.body;
@@ -231,7 +228,7 @@ async function run() {
       return res.send(result);
     });
 
-    // Payment System
+    // Stripe Payment System
 
     app.post("/create-payment-intent", async (req, res) => {
       const service = req.body;
@@ -245,7 +242,7 @@ async function run() {
       res.send({ clientSecret: paymentIntent.client_secret });
     });
 
-    // All Request Section ===
+    // Create a New Club & Fourm Request Api Here === (allRequestCollection)
 
     app.post("/allrequest", async (req, res) => {
       const query = req.body;
@@ -266,14 +263,15 @@ async function run() {
       res.send(deleteReq);
     });
 
-    // end
-    // Get EventBlogs here
+
+    // Forum & Club EventBlogs Api  (eventBlogsCollection)
     app.get("/eventblogs", async (req, res) => {
       const quary = {};
       const cursor = eventBlogsCollection.find(quary);
       const result = await cursor.toArray();
       res.send(result);
     });
+
     // New blogs Posted here
     app.post("/postblogs", async (req, res) => {
       const query = req.body;
