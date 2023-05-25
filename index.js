@@ -272,14 +272,13 @@ async function run() {
       res.send(result);
     });
 
-    // New blogs Posted here
     app.post("/postblogs", async (req, res) => {
       const query = req.body;
       const blogs = await eventBlogsCollection.insertOne(query);
       res.send(blogs);
     });
 
-    // Get All Recent Event
+    // Get All Recent Event (recentEventsCollection)
     app.get("/recentEvents", async (req, res) => {
       const quary = {};
       const cursor = recentEventsCollection.find(quary);
@@ -287,8 +286,7 @@ async function run() {
       res.send(result);
     });
 
-
-    // Get All Upcoming Eventss
+    // Get All Upcoming Eventss (upcomingEventsCollection)
     app.get("/upcomingEvents", async (req, res) => {
       const quary = {};
       const cursor = upcomingEventsCollection.find(quary);
@@ -301,7 +299,7 @@ async function run() {
       res.send(eventPost);
     });
 
-    // Event Registration
+    // Event Registration (EventRegistrationCollection)
     app.post("/eventRegistration", async (req, res) => {
       const quary = req.body;
       const registration = await EventRegistrationCollection.insertOne(quary);
