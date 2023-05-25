@@ -10,11 +10,14 @@ app.use(express.json());
 const cors = require("cors");
 app.use(cors());
 
+// Server  Port
+const port = process.env.PORT || 8000;
+
+// Stripe Payment system Require
 const stripe = require("stripe")(
   "sk_test_51LXS98B5Y3AeAE8ixEr3XbAzakqMdCNqxsU9YIZyhx8IaSGdcIaHNUdF4zPSaludDIIwz7kxSsnL6bcAkD4EUURB00BKYOJvq7"
 );
 
-const port = process.env.PORT || 8000;
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.akmwf4e.mongodb.net/?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, {
